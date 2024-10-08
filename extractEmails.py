@@ -18,7 +18,8 @@ CLIENT_SECRETS_FILE = "credentials.json"  # Downloaded from Google Cloud Console
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Redirect URI for OAuth flow
-REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
+# REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
+REDIRECT_URI = 'https://emailfallacydetector.vercel.app/oauth2callback'  # Ensure this matches Google Cloud Console
 
 # Google API settings
 API_SERVICE_NAME = 'gmail'
