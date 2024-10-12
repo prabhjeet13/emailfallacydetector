@@ -1,4 +1,5 @@
 import os
+import json
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -6,6 +7,7 @@ import googleapiclient.discovery
 from flask import Flask, redirect, request, url_for, session, render_template, request, jsonify
 from google.auth.transport.requests import Request
 from classifier import classify_email
+import tempfile
 # Set up Flask app
 app = Flask(__name__)
 app.secret_key = '131313'  # Required to keep session secure
@@ -52,9 +54,15 @@ def index():
 # Authorize route: Start the OAuth flow
 @app.route('/authorize')
 def authorize():
+
+
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as tmp:
+            json.dump(CLIENT_SECRETS_FILE, tmp)
+            tmp_path = tmp.name
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES)
+        tmp_path, scopes=SCOPES)
 
     # Set the redirect URI for the authorization response
     flow.redirect_uri = url_for('oauth2callback', _external=True)
@@ -79,9 +87,12 @@ def oauth2callback():
     if not state:
         return 'Error: State not found in session. Please try again.'
 
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as tmp:
+            json.dump(CLIENT_SECRETS_FILE, tmp)
+            tmp_path = tmp.name
     # Recreate the flow instance to continue the OAuth flow
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+        tmp_path, scopes=SCOPES, state=state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
     # Exchange the authorization code for access token
