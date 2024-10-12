@@ -4,22 +4,40 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 from flask import Flask, redirect, request, url_for, session, render_template, request, jsonify
-import random
 from google.auth.transport.requests import Request
 from classifier import classify_email
 # Set up Flask app
 app = Flask(__name__)
 app.secret_key = '131313'  # Required to keep session secure
 
+# Access the environment variables
+client_id = os.getenv('CLIENT_ID')
+project_id = os.getenv('PROJECT_ID')
+auth_uri = os.getenv('AUTH_URI')
+token_uri = os.getenv('TOKEN_URI')
+auth_provider_cert_url = os.getenv('AUTH_PROVIDER_CERT_URL')
+client_secret = os.getenv('CLIENT_SECRET')
+redirect_uri = os.getenv('REDIRECT_URI')
+
 # OAuth 2.0 Client ID and Secret
-CLIENT_SECRETS_FILE = "credentials.json"  # Downloaded from Google Cloud Console
+CLIENT_SECRETS_FILE = {
+    "web": {
+        "client_id": client_id,
+        "project_id": project_id,
+        "auth_uri": auth_uri,
+        "token_uri": token_uri,
+        "auth_provider_x509_cert_url": auth_provider_cert_url,
+        "client_secret": client_secret,
+        "redirect_uris": [redirect_uri]
+    }
+}
 
 # OAuth 2.0 scopes
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Redirect URI for OAuth flow
-REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
-# REDIRECT_URI = 'https://emailfallacydetector.vercel.app/oauth2callback'  # Ensure this matches Google Cloud Console
+# REDIRECT_URI = 'http://localhost:5000/oauth2callback'  # Ensure this matches Google Cloud Console
+REDIRECT_URI = 'https://emailfallacydetector-vf57.onrender.com/oauth2callback'  # Ensure this matches Google Cloud Console
 
 # Google API settings
 API_SERVICE_NAME = 'gmail'
