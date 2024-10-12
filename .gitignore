@@ -1,5 +1,2 @@
-emailss.csv
 credentials.json
 __pycache__/
-spam_classifier_model.pkl
-tfidf_vectorizer.pkl
