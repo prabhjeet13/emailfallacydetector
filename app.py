@@ -57,7 +57,7 @@ def authorize():
 
 
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json',mode ='w') as tmp:
             json.dump(CLIENT_SECRETS_FILE, tmp)
             tmp_path = tmp.name
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow
@@ -87,7 +87,7 @@ def oauth2callback():
     if not state:
         return 'Error: State not found in session. Please try again.'
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.json') as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.json',mode ='w') as tmp:
             json.dump(CLIENT_SECRETS_FILE, tmp)
             tmp_path = tmp.name
     # Recreate the flow instance to continue the OAuth flow
